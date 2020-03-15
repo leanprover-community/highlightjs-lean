@@ -1,0 +1,30 @@
+{
+  "name": "highlightjs-lean",
+  "version": "1.0.0",
+  "description": "A highlightjs language grammar for the Lean theorem proving language.",
+  "main": "src/lean.js",
+  "files": ["src/lean.js", "dist/lean.min.js"],
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leanprover-community/highlightjs-lean.git"
+  },
+  "keywords": [
+    "leanprover",
+    "highlight.js",
+    "highlightjs",
+    "syntax"
+  ],
+  "author": "Patrick Massot <patrick.massot@free.fr>",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/leanprover-community/highlightjs-lean/issues"
+  },
+  "homepage": "https://github.com/leanprover-community/highlightjs-lean#readme",
+  "devDependencies": {
+    "highlight.js": "^9.18.1",
+    "mocha": "^7.1.0"
+  }
+}
