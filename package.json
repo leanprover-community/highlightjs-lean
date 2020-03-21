@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "A highlightjs language grammar for the Lean theorem proving language.",
   "main": "src/lean.js",
-  "files": ["src/lean.js", "dist/lean.min.js"],
+  "files": [
+    "src/lean.js",
+    "dist/lean.min.js"
+  ],
   "scripts": {
     "test": "mocha"
   },
@@ -25,6 +28,6 @@
   "homepage": "https://github.com/leanprover-community/highlightjs-lean#readme",
   "devDependencies": {
     "highlight.js": "^9.18.1",
-    "mocha": "^7.1.0"
+    "mocha": "^7.1.1"
   }
 }
