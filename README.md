@@ -48,7 +48,7 @@ hljs.initHighlightingOnLoad();
 (Instructions adapted from the [highlightjs-cypher CONTRIBUTING.md](https://github.com/highlightjs/highlightjs-cypher/blob/master/CONTRIBUTING.md).)
 
 To build `dist/lean.min.js` this repository should be cloned to the `extra/`
-subdirectory of the [highlight.js repo](https://github.com/highlightjs/highglight.js).
+subdirectory of the [highlight.js repo](https://github.com/highlightjs/highlight.js).
 
 ```bash
 git clone https://github.com/highlightjs/highlight.js
