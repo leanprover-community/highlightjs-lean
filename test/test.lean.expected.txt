@@ -14,6 +14,7 @@
 Each metric space induces a canonical `uniform_space` and hence a
 canonical `topological_space`.  -/</span>
 <span class="hljs-theorem"><span class="hljs-keyword">class</span> <span class="hljs-title">metric_space</span> <span class="hljs-params">(α : <span class="hljs-built_in">Type</span> u)</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">uniform_space</span> α <span class="hljs-symbol">:</span></span> <span class="hljs-built_in">Type</span> u <span class="hljs-symbol">:=</span>
+(dist : α → α → ℝ)
 (dist_self : <span class="hljs-keyword">∀</span> x : α, dist x x = <span class="hljs-number">0</span>)
 (eq_of_dist_eq_zero : <span class="hljs-keyword">∀</span> {x y : α}, dist x y = <span class="hljs-number">0</span> → x = y)
 (dist_comm : <span class="hljs-keyword">∀</span> x y : α, dist x y = dist y x)
