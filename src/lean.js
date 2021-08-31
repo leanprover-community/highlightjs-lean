@@ -7,16 +7,19 @@ Description: Language definition for Lean theorem prover
 
 module.exports = function(hljs) {
   var LEAN_KEYWORDS = {
+    $pattern: /\w+|λ|∀|Π|∃|:=?/u,
     keyword:
       'theorem|10 lemma|10 definition def class structure instance ' +
       'example inductive coinductive ' +
       'axiom axioms hypothesis constant constants ' +
       'universe universes variable variables parameter parameters ' +
       'begin end ' +
+      'infix infixr ' +
       'import open theory prelude renaming hiding exposing ' +
       'calc  match do  by let in extends ' +
       'fun assume ' +
-      '#check #eval #reduce #print',
+      '#check #eval #reduce #print ' +
+      "λ ∀ ∃ ⨁ Π",
     built_in:
       'Type Prop|10 Sort rw|10 rewrite rwa erw subst substs ' +
       'simp dsimp simpa simp_intros finish ' +
@@ -39,11 +42,13 @@ module.exports = function(hljs) {
       'noncomputable|10 private protected meta mutual',
     section:
       'section namespace end',
-    strong:
+    sorry:
       'sorry admit',
+    symbol:
+      ':='
   };
 
-  var LEAN_IDENT_RE = /[A-Za-z_][\\w\u207F-\u209C\u1D62-\u1D6A\u2079\']*/;
+  var LEAN_IDENT_RE = /[A-Za-z_][\w\u207F-\u209C\u1D62-\u1D6A\u2079\']*/;
 
   var DASH_COMMENT = hljs.COMMENT('--', '$');
   var MULTI_LINE_COMMENT = hljs.COMMENT('/-[^-]', '-/');
@@ -65,15 +70,22 @@ module.exports = function(hljs) {
     end: '$'
   };
 
-  var LEAN_DEFINITION =	{
+  var LEAN_DEFINITION = {
     className: 'theorem',
     beginKeywords: 'def theorem lemma class instance structure',
-    end: ':=',
+    end: /:=/,
     excludeEnd: true,
     contains: [
       {
         className: 'keyword',
-        begin: /extends/
+        begin: /extends/,
+        contains: [
+          {
+            className: 'symbol',
+            begin: /:=/,
+            endsParent: true
+          },
+        ]
       },
       hljs.inherit(hljs.TITLE_MODE, {
         begin: LEAN_IDENT_RE
@@ -82,6 +94,11 @@ module.exports = function(hljs) {
         className: 'params',
         begin: /[([{]/, end: /[)\]}]/, endsParent: false,
         keywords: LEAN_KEYWORDS,
+      },
+      {
+        className: 'symbol',
+        begin: /:=/,
+        endsParent: true
       },
       {
         className: 'symbol',
