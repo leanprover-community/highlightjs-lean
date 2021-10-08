@@ -1,0 +1,49 @@
+name: Minified Build
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [15.x]
+
+    # these steps roughly follow https://github.com/highlightjs/highlight.js/blob/main/extra/3RD_PARTY_QUICK_START.md
+    steps:
+    - name: Checkout highlightjs
+      uses: actions/checkout@v2
+      with:
+        repository: 'highlightjs/highlight.js'
+    - name: Checkout highlightjs-lean
+      uses: actions/checkout@v2
+      with:
+        path: extra/highlightjs-lean
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install
+    - name: Build lean.min.js
+      run: |
+        mv extra/highlightjs-lean/dist/lean.min.js extra/highlightjs-lean/dist/lean.min.js.orig
+        node ./tools/build.js -t cdn
+    - name: Check that the committed version matches
+      id: diff_step
+      run: |
+        git diff --color --no-index extra/highlightjs-lean/dist/lean.min.js.orig extra/highlightjs-lean/dist/lean.min.js
+    - name: Uploading the regenerated lean.min.js
+      id: upload_step
+      if: failure() && steps.diff_step.outcome == 'failure'
+      uses: actions/upload-artifact@v2
+      with:
+        name: minified
+        path: extra/highlightjs-lean/dist/lean.min.js
+    - name: Report failure
+      if: failure() && steps.upload_step.outcome == 'success'
+      uses: actions/github-script@v3
+      with:
+        script: |
+          core.setFailed('dist/lean.min.js is outdated, use the version attached to this build')
