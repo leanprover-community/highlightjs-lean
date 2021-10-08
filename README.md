@@ -9,6 +9,16 @@ A [highlightjs](https://highlightjs.org/) language grammar for the
 
 Simply include the Highlight.js library in your webpage or Node app, then load this module.
 
+This adds a `sorry` style on top of the standard highlightjs styles for highlighting `sorry` and `admit`.
+You can set the color of this by adding the following CSS style:
+```html
+<style>
+.hljs-sorry {
+  color: red;
+}
+</style>
+```
+
 ### Static website or simple usage
 
 Simply load the module after loading Highlight.js. You'll use the minified version found in the `dist` directory. This module is just a CDN build of the language, so it will register itself as the Javascript is loaded.
