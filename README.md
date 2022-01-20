@@ -28,7 +28,7 @@ Simply load the module after loading Highlight.js. You'll use the minified versi
 <script type="text/javascript" charset="UTF-8"
   src="/path/to/highlightjs-lean/dist/lean.min.js"></script>
 <script type="text/javascript">
-  hljs.initHighlightingOnLoad();
+  hljs.highlightAll();
 </script>
 ```
 
@@ -50,7 +50,7 @@ var hljs = require('highlightjs');
 var leanHljs = require('highlightjs-lean');
 
 hljs.registerLanguage("lean", leanHljs);
-hljs.initHighlightingOnLoad();
+hljs.highlightAll();
 ```
 
 ## Contributing
