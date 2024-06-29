@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/leanprover-community/highlightjs-lean#readme",
   "devDependencies": {
-    "highlight.js": "^10.4.1",
+    "highlight.js": "^11.9.0",
     "mocha": "^9.1.2"
   }
 }
