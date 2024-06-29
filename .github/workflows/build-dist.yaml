@@ -9,20 +9,20 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [15.x]
+        node-version: [22.x]
 
     # these steps roughly follow https://github.com/highlightjs/highlight.js/blob/main/extra/3RD_PARTY_QUICK_START.md
     steps:
     - name: Checkout highlightjs
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         repository: 'highlightjs/highlight.js'
     - name: Checkout highlightjs-lean
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         path: extra/highlightjs-lean
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install
@@ -37,13 +37,13 @@ jobs:
     - name: Uploading the regenerated lean.min.js
       id: upload_step
       if: failure() && steps.diff_step.outcome == 'failure'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: minified
         path: extra/highlightjs-lean/dist/lean.min.js
     - name: Report failure
       if: failure() && steps.upload_step.outcome == 'success'
-      uses: actions/github-script@v3
+      uses: actions/github-script@v7
       with:
         script: |
           core.setFailed('dist/lean.min.js is outdated, use the version attached to this build')
