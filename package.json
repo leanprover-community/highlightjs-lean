@@ -2,9 +2,10 @@
   "name": "highlightjs-lean",
   "version": "1.1.0",
   "description": "A highlightjs language grammar for the Lean theorem proving language.",
-  "main": "src/lean.js",
+  "main": "src/languages/lean.js",
   "files": [
-    "src/lean.js",
+    "src/languages/lean.js",
+    "dist/lean.es.min.js",
     "dist/lean.min.js"
   ],
   "scripts": {
