@@ -41,6 +41,8 @@ Simply load the module after loading Highlight.js. You'll use the minified versi
 
 - More info: <https://unpkg.com>
 
+- For a minimal HTML page which uses this package from the UNPKG CDN, see `test/cdn_test.html` ([contributed by Ed Ayers](https://github.com/leanprover-community/highlightjs-lean/issues/13)).
+
 **Important note**: If you have pinned a CDN version of `highlightjs-lean` older than 1.2.0 in your web page, please update as those builds are broken and cannot be fixed. See [the explanation in issue #13](https://github.com/leanprover-community/highlightjs-lean/issues/13#issuecomment-2198344147).
 
 ### With Node or another build system
