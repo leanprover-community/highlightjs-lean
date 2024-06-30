@@ -41,6 +41,8 @@ Simply load the module after loading Highlight.js. You'll use the minified versi
 
 - More info: <https://unpkg.com>
 
+**Important note**: If you have pinned a CDN version of `highlightjs-lean` older than 1.2.0 in your web page, please update as those builds are broken and cannot be fixed. See [the explanation in issue #13](https://github.com/leanprover-community/highlightjs-lean/issues/13#issuecomment-2198344147).
+
 ### With Node or another build system
 
 If you're using Node / Webpack / Rollup / Browserify, etc, simply require the language module, then register it with Highlight.js.
