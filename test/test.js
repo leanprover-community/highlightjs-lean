@@ -1,14 +1,14 @@
 const assert = require('assert');
 const fs = require("fs");
 const hljs = require('highlight.js');
-const leanHljs = require('../src/lean.js');
+const leanHljs = require('../src/languages/lean.js');
 
 describe('lean hljs', function() {
   it('should detect and highlight test.lean.txt correctly', function() {
     hljs.registerLanguage('lean', leanHljs);
 
-    const testLean = fs.readFileSync('test/test.lean.txt', 'utf-8');
-    const testLeanExpected = fs.readFileSync('test/test.lean.expected.txt', 'utf-8');
+    const testLean = fs.readFileSync('test/markup/lean/lean.txt', 'utf-8');
+    const testLeanExpected = fs.readFileSync('test/markup/lean/lean.expected.txt', 'utf-8');
 
     const highlighted = hljs.highlightAuto(testLean);
 
