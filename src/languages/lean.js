@@ -22,7 +22,7 @@ module.exports = function(hljs) {
       "λ ∀ ∃ ⨁ Π",
     built_in:
       'Type Prop|10 Sort rw|10 rewrite rwa erw subst substs ' +
-      'simp dsimp simpa simp_intros finish ' +
+      'simp dsimp simpa simp_intros finish omega grind hammer ' +
       'unfold unfold1 dunfold unfold_projs unfold_coes ' +
       'delta cc ac_reflexivity ac_refl ' +
       'existsi|10 cases rcases with intro intros introv by_cases ' +
