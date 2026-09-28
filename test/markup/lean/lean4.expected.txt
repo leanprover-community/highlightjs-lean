@@ -1,0 +1,105 @@
+<span class="hljs-doctag">/-- Lean 4 fixture with representative syntax. -/</span>
+<span class="hljs-keyword">import</span> Mathlib
+<span class="hljs-keyword">open</span> <span class="hljs-keyword">scoped</span> Nat
+<span class="hljs-keyword">open</span> Nat
+
+<span class="hljs-section">namespace</span> Demo
+
+<span class="hljs-section">section</span> Basics
+
+<span class="hljs-keyword">variable</span> (α : <span class="hljs-built_in">Type</span>) (f : Nat → Nat)
+
+<span class="hljs-theorem"><span class="hljs-keyword">abbrev</span> <span class="hljs-title">NatPair</span> <span class="hljs-symbol">:=</span></span> Nat × Nat
+<span class="hljs-theorem"><span class="hljs-keyword">opaque</span> <span class="hljs-title">hiddenId</span> <span class="hljs-symbol">:</span></span> α → α
+
+<span class="hljs-keyword">scoped</span> <span class="hljs-keyword">infixl</span>:<span class="hljs-number">65</span> <span class="hljs-string">&quot; ~&gt; &quot;</span> =&gt; Nat.succ
+<span class="hljs-keyword">alias</span> Nat.succ ← succNat
+
+<span class="hljs-theorem"><span class="hljs-keyword">syntax</span> &quot;<span class="hljs-title">triple</span> &quot; <span class="hljs-title">term</span> <span class="hljs-symbol">:</span></span> term
+<span class="hljs-keyword">macro_rules</span>
+  | `(triple $x) =&gt; `(($x, $x, $x))
+
+<span class="hljs-theorem"><span class="hljs-keyword">inductive</span> <span class="hljs-title">Tri</span> <span class="hljs-keyword">where</span></span>
+<span class="hljs-title">  | red</span> : Tri
+<span class="hljs-title">  | blue</span> : Tri
+<span class="hljs-title">  | green</span> : Tri
+
+<span class="hljs-theorem"><span class="hljs-keyword">structure</span> <span class="hljs-title">SimpleGraph</span> <span class="hljs-params">(V : <span class="hljs-built_in">Type</span>*)</span> <span class="hljs-keyword">where</span></span>
+<span class="hljs-title">  Adj</span> : V → V → <span class="hljs-built_in">Prop</span>
+<span class="hljs-title">  symm</span> : Symmetric Adj
+<span class="hljs-title">  loopless</span> : Irreflexive Adj
+
+<span class="hljs-comment">/-
+Outer comment
+<span class="hljs-comment">/- nested comment -/</span>
+-/</span>
+
+<span class="hljs-meta">@[simp]</span> <span class="hljs-theorem"><span class="hljs-keyword">theorem</span> <span class="hljs-title">demo</span> <span class="hljs-params">(f : Nat → Nat)</span> <span class="hljs-symbol">:</span></span> Nat := <span class="hljs-keyword">by</span>
+  <span class="hljs-built_in">letI</span> : Inhabited Nat := ⟨<span class="hljs-number">0</span>⟩
+  <span class="hljs-keyword">let</span> x := f <span class="hljs-number">0</span>
+  <span class="hljs-built_in">exact</span> x
+
+<span class="hljs-meta">attribute [simp] Nat.add_comm</span>
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">byEqn</span> <span class="hljs-symbol">:</span></span> Nat → Nat
+  | <span class="hljs-number">0</span> =&gt; <span class="hljs-number">0</span>
+<span class="hljs-title">  | n</span> + <span class="hljs-number">1</span> =&gt; n
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">sumUpTo</span> <span class="hljs-params">(n : Nat)</span> <span class="hljs-symbol">:</span></span> Nat := go n <span class="hljs-keyword">where</span>
+<span class="hljs-title">  go</span> : Nat → Nat
+  | <span class="hljs-number">0</span> =&gt; <span class="hljs-number">0</span>
+<span class="hljs-title">  | m</span> + <span class="hljs-number">1</span> =&gt; m + go m
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">pick</span> <span class="hljs-params">(xs : List Nat)</span> <span class="hljs-symbol">:</span></span> Nat := <span class="hljs-keyword">do</span>
+  <span class="hljs-keyword">let</span> y &lt;- pure <span class="hljs-number">1</span>
+  pure y
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">classify</span> <span class="hljs-params">(t : Tri)</span> <span class="hljs-symbol">:</span></span> Nat := <span class="hljs-keyword">by</span>
+  <span class="hljs-keyword">match</span> t <span class="hljs-keyword">with</span>
+  | .red =&gt; <span class="hljs-number">0</span>
+  | .blue =&gt; <span class="hljs-number">1</span>
+  | .green =&gt; <span class="hljs-number">2</span>
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">absurd</span> <span class="hljs-params">(h : False)</span> <span class="hljs-symbol">:</span></span> Nat := <span class="hljs-keyword">nomatch</span> h
+
+<span class="hljs-meta">#check</span> hiddenId
+<span class="hljs-meta">#check</span> byEqn
+<span class="hljs-meta">#eval</span> pick []
+<span class="hljs-meta">#reduce</span> byEqn <span class="hljs-number">2</span>
+<span class="hljs-meta">#synth</span> Inhabited Nat
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">unfinished</span> <span class="hljs-symbol">:</span></span> Nat := <span class="hljs-keyword">by</span>
+  <span class="hljs-sorry">sorry</span>
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">unfinished2</span> <span class="hljs-symbol">:</span></span> Nat := <span class="hljs-keyword">by</span>
+  <span class="hljs-sorry">admit</span>
+
+<span class="hljs-keyword">module</span>
+
+<span class="hljs-keyword">public</span> <span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">exposed</span> <span class="hljs-symbol">:</span></span> Nat := <span class="hljs-number">1</span>
+<span class="hljs-keyword">unsafe</span> <span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">unchecked</span> <span class="hljs-symbol">:</span></span> Nat := <span class="hljs-number">2</span>
+
+<span class="hljs-keyword">partial</span> <span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">down</span> <span class="hljs-symbol">:</span></span> Nat → Nat
+  | <span class="hljs-number">0</span> =&gt; <span class="hljs-number">0</span>
+<span class="hljs-title">  | n</span> + <span class="hljs-number">1</span> =&gt; down n
+<span class="hljs-keyword">termination_by</span> n =&gt; n
+<span class="hljs-keyword">decreasing_by</span> simp_wf
+
+<span class="hljs-keyword">nonrec</span> <span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">shadow</span> <span class="hljs-symbol">:</span></span> Nat := <span class="hljs-number">0</span>
+
+<span class="hljs-keyword">declare_syntax_cat</span> mycat
+<span class="hljs-theorem"><span class="hljs-keyword">elab</span> &quot;<span class="hljs-title">hello_cmd</span>&quot; <span class="hljs-symbol">:</span></span> command =&gt; pure ()
+<span class="hljs-keyword">elab_rules</span> : term
+  | `(helloTerm) =&gt; `(<span class="hljs-number">0</span>)
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">ch</span> <span class="hljs-symbol">:</span></span> Char := <span class="hljs-string">&#x27;a&#x27;</span>
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">esc</span> <span class="hljs-symbol">:</span></span> Char := <span class="hljs-string">&#x27;\n&#x27;</span>
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">rawStr</span> <span class="hljs-symbol">:=</span></span> <span class="hljs-string">r#&quot;raw \&quot;quoted\&quot; string&quot;#</span>
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">hexN</span> <span class="hljs-symbol">:</span></span> Nat := <span class="hljs-number">0xff</span>
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">binN</span> <span class="hljs-symbol">:</span></span> Nat := <span class="hljs-number">0b1010</span>
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">quoted</span> <span class="hljs-symbol">:=</span></span> <span class="hljs-symbol">``Nat.succ</span>
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">«module»</span> <span class="hljs-symbol">:</span></span> Nat := <span class="hljs-number">1</span>
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">forallDemo</span> <span class="hljs-symbol">:</span></span> <span class="hljs-built_in">Prop</span> := <span class="hljs-keyword">forall</span> x : Nat, x = x
+
+<span class="hljs-section">end</span> Basics
+<span class="hljs-section">end</span> Demo

@@ -4,15 +4,22 @@ const hljs = require('highlight.js');
 const leanHljs = require('../src/languages/lean.js');
 
 describe('lean hljs', function() {
-  it('should detect and highlight test.lean.txt correctly', function() {
-    hljs.registerLanguage('lean', leanHljs);
+  hljs.registerLanguage('lean', leanHljs);
 
-    const testLean = fs.readFileSync('test/markup/lean/lean.txt', 'utf-8');
-    const testLeanExpected = fs.readFileSync('test/markup/lean/lean.expected.txt', 'utf-8');
+  [
+    'lean3',
+    'lean4'
+  ].forEach((fixture) => {
+    it(`should detect and highlight ${fixture}.txt correctly`, function() {
+      const inputPath = `test/markup/lean/${fixture}.txt`;
+      const expectedPath = `test/markup/lean/${fixture}.expected.txt`;
+      const source = fs.readFileSync(inputPath, 'utf-8');
+      const expected = fs.readFileSync(expectedPath, 'utf-8');
 
-    const highlighted = hljs.highlightAuto(testLean);
+      const highlighted = hljs.highlightAuto(source);
 
-    assert.equal(highlighted.language, 'lean');
-    assert.equal(highlighted.value, testLeanExpected);
+      assert.equal(highlighted.language, 'lean');
+      assert.equal(highlighted.value, expected);
+    });
   });
 });
