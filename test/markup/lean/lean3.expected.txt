@@ -1,5 +1,5 @@
 <span class="hljs-keyword">import</span> data.real.basic analysis.topology.topological_structures
-<span class="hljs-keyword">open</span> lattice set filter classical
+<span class="hljs-keyword">open</span> lattice set filter <span class="hljs-built_in">classical</span>
 <span class="hljs-meta">noncomputable</span> <span class="hljs-keyword">theory</span>
 
 <span class="hljs-keyword">universes</span> u v w
@@ -26,7 +26,7 @@ canonical `topological_space`.  -/</span>
 <span class="hljs-theorem"><span class="hljs-keyword">theorem</span> <span class="hljs-title">tendsto_nhds_of_metric</span> <span class="hljs-params">[metric_space β]</span> <span class="hljs-params">{f : α → β}</span> <span class="hljs-params">{a b}</span> <span class="hljs-symbol">:</span></span>
   tendsto f (nhds a) (nhds b) ↔ <span class="hljs-symbol">∀</span> ε &gt; <span class="hljs-number">0</span>,
     <span class="hljs-symbol">∃</span> δ &gt; <span class="hljs-number">0</span>, <span class="hljs-symbol">∀</span>{x:α}, dist x a &lt; δ → dist (f x) b &lt; ε <span class="hljs-symbol">:=</span>
-⟨<span class="hljs-symbol">λ</span> H ε ε0, mem_nhds_iff_metric.<span class="hljs-number">1</span> (H (ball_mem_nhds _ ε0)),
+⟨<span class="hljs-symbol">λ</span> H ε ε0, mem_nhds_iff_metric.<span class="hljs-number">1</span> (H (ball_mem_nhds <span class="hljs-symbol">_</span> ε0)),
  <span class="hljs-symbol">λ</span> H s hs,
-  <span class="hljs-keyword">let</span> ⟨ε, ε0, hε⟩ <span class="hljs-symbol">:=</span> mem_nhds_iff_metric.<span class="hljs-number">1</span> hs, ⟨δ, δ0, hδ⟩ <span class="hljs-symbol">:=</span> H _ ε0 <span class="hljs-keyword">in</span>
+  <span class="hljs-keyword">let</span> ⟨ε, ε0, hε⟩ <span class="hljs-symbol">:=</span> mem_nhds_iff_metric.<span class="hljs-number">1</span> hs, ⟨δ, δ0, hδ⟩ <span class="hljs-symbol">:=</span> H <span class="hljs-symbol">_</span> ε0 <span class="hljs-keyword">in</span>
 mem_nhds_iff_metric.<span class="hljs-number">2</span> ⟨δ, δ0, <span class="hljs-symbol">λ</span> x h, hε (hδ h)⟩⟩ <span class="hljs-comment">-- dash comment</span>

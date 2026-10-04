@@ -83,7 +83,7 @@ Outer comment
   | <span class="hljs-number">0</span> =&gt; <span class="hljs-number">0</span>
 <span class="hljs-title">  | n</span> + <span class="hljs-number">1</span> =&gt; down n
 <span class="hljs-keyword">termination_by</span> n =&gt; n
-<span class="hljs-keyword">decreasing_by</span> simp_wf
+<span class="hljs-keyword">decreasing_by</span> <span class="hljs-built_in">simp_wf</span>
 
 <span class="hljs-keyword">nonrec</span> <span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">shadow</span> <span class="hljs-symbol">:</span></span> Nat <span class="hljs-symbol">:=</span> <span class="hljs-number">0</span>
 

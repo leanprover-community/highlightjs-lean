@@ -16,6 +16,11 @@ function mark(scope, html) {
   return `<span class="hljs-${scope}">${html}</span>`;
 }
 
+function escapeHTML(source) {
+  return source.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+}
+
 describe('lean hljs', function() {
   hljs.registerLanguage('lean', leanHljs);
 
@@ -109,6 +114,96 @@ describe('lean hljs', function() {
       assert.equal(highlight(word), mark('built_in', word));
     }
     assert.equal(highlight(':='), mark('symbol', ':='));
+  });
+
+  it('covers Lean 4 reserved tokens and built-in parser heads', function() {
+    const vocabulary = require('./lean4-keywords.json');
+    const scopes = ['keyword', 'built_in', 'literal', 'meta', 'section', 'sorry', 'symbol'];
+    for (const token of new Set([
+      ...vocabulary.reserved, ...vocabulary.parserHeads, ...vocabulary.percentTokens
+    ])) {
+      const output = highlight(token);
+      assert.ok(scopes.some(scope => output.includes(mark(scope, escapeHTML(token)))), token);
+    }
+    for (const token of vocabulary.compoundTokens) {
+      const prefix = token === 'let_λ' ? token : token.slice(0, -1);
+      const scope = token.startsWith('#') ? 'meta' : 'keyword';
+      assert.equal(highlight(token), mark(scope, prefix) + escapeHTML(token.slice(prefix.length)), token);
+    }
+  });
+
+  it('highlights Lean 4 control flow, initialization, and modern tactics', function() {
+    const source = 'initialize x : Nat ← do\n' +
+      '  let mut total := 0\n' +
+      '  for i in [1, 2] do\n' +
+      '    unless i == 0 do\n' +
+      '      while total < 10 do\n' +
+      '        if i == 2 then break else continue\n' +
+      '  try return total catch e => throwError "failed" finally pure ()\n' +
+      '#eval! x\n' +
+      'example : True := by simp_all?\n' +
+      'example : 1 < 2 := by omega';
+    const output = highlight(source);
+    for (const token of ['initialize', 'mut', 'for', 'unless', 'while', 'break', 'return', 'catch', 'finally', 'throwError']) {
+      assert.ok(output.includes(mark('keyword', token)), token);
+    }
+    for (const token of ['continue', 'try', 'simp_all?', 'omega']) {
+      assert.ok(output.includes(mark('built_in', token)), token);
+    }
+    assert.ok(output.includes(mark('meta', '#eval!')));
+  });
+
+  it('matches punctuation-bearing Lean 4 tokens without splitting identifiers', function() {
+    for (const [token, scope] of [
+      ['by?', 'keyword'], ['termination_by?', 'keyword'], ['assert!', 'keyword'],
+      ['simp_all?!', 'built_in'], ["repeat1'", 'built_in'], ['#eval!', 'meta']
+    ]) {
+      assert.ok(highlight(token).includes(mark(scope, escapeHTML(token))), token);
+      const names = [token + 'x', token + "'"];
+      if (!token.startsWith('#')) names.push('α' + token, 'Foo.' + token);
+      for (const name of names) {
+        assert.equal(highlight(name), escapeHTML(name), name);
+      }
+    }
+    for (const token of ['decl_name%', "for_in'%", 'exact?%']) {
+      assert.equal(highlight(token + 'x'), mark('keyword', escapeHTML(token)) + 'x');
+      for (const prefix of ['α', 'Foo.']) {
+        assert.equal(highlight(prefix + token), escapeHTML(prefix + token));
+      }
+    }
+    assert.equal(highlight('return%2'), mark('keyword', 'return') + '%' + mark('number', '2'));
+    assert.equal(highlight('date date('), 'date ' + mark('keyword', 'date') + '(');
+    assert.equal(highlight('Foo.date('), 'Foo.date(');
+    assert.equal(highlight('α#v[]'), 'α' + mark('meta', '#v') + '[]');
+  });
+
+  it('protects literals and balances parameters around compound keywords', function() {
+    const body = 'for return catch finally simp_all?! decl_name% #eval!';
+    assert.equal(highlight('"' + body + '"'), mark('string', '&quot;' + body + '&quot;'));
+    assert.equal(highlight('-- ' + body), mark('comment', '-- ' + body));
+    assert.equal(highlight('«return»'), mark('title', '«return»'));
+    const output = highlight('def f (x := date(2026, 10, 4)) : Nat := 0');
+    assert.ok(output.includes(mark('params', '(x ' + mark('symbol', ':=') + ' ' +
+      mark('keyword', 'date') + mark('params', '(' + mark('number', '2026') + ', ' +
+        mark('number', '10') + ', ' + mark('number', '4') + ')') + ')')));
+    assert.ok(output.endsWith(' Nat ' + mark('symbol', ':=') + ' ' + mark('number', '0')));
+  });
+
+  it('recognizes contextual Lean 4 syntax modifiers', function() {
+    for (const source of [
+      'simp only [h]', 'let rec f := f', 'let +nondep +postponeValue +usedOnly x := y',
+      'termination_by structural n', 'partial_fixpoint monotonicity by assumption',
+      'for x in xs invariant fun s => True do pure ()',
+      'requires h', 'ensures r'
+    ]) {
+      const output = highlight(source);
+      for (const token of source.split(/\W+/).filter(token => [
+        'only', 'rec', 'nondep', 'postponeValue', 'usedOnly', 'structural',
+        'monotonicity', 'invariant', 'requires', 'ensures'
+      ].includes(token))) {
+        assert.ok(output.includes(mark('keyword', token)), source);
+      }
+    }
   });
 
   it('matches arbitrary raw-string delimiters without interpreting their contents', function() {
