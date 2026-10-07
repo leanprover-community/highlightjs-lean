@@ -1,0 +1,105 @@
+/-- Lean 4 fixture with representative syntax. -/
+import Mathlib
+open scoped Nat
+open Nat
+
+namespace Demo
+
+section Basics
+
+variable (α : Type) (f : Nat → Nat)
+
+abbrev NatPair := Nat × Nat
+opaque hiddenId : α → α
+
+scoped infixl:65 " ~> " => Nat.succ
+alias Nat.succ ← succNat
+
+syntax "triple " term : term
+macro_rules
+  | `(triple $x) => `(($x, $x, $x))
+
+inductive Tri where
+  | red : Tri
+  | blue : Tri
+  | green : Tri
+
+structure SimpleGraph (V : Type*) where
+  Adj : V → V → Prop
+  symm : Symmetric Adj
+  loopless : Irreflexive Adj
+
+/-
+Outer comment
+/- nested comment -/
+-/
+
+@[simp] theorem demo (f : Nat → Nat) : Nat := by
+  letI : Inhabited Nat := ⟨0⟩
+  let x := f 0
+  exact x
+
+attribute [simp] Nat.add_comm
+
+def byEqn : Nat → Nat
+  | 0 => 0
+  | n + 1 => n
+
+def sumUpTo (n : Nat) : Nat := go n where
+  go : Nat → Nat
+  | 0 => 0
+  | m + 1 => m + go m
+
+def pick (xs : List Nat) : Nat := do
+  let y <- pure 1
+  pure y
+
+def classify (t : Tri) : Nat := by
+  match t with
+  | .red => 0
+  | .blue => 1
+  | .green => 2
+
+def absurd (h : False) : Nat := nomatch h
+
+#check hiddenId
+#check byEqn
+#eval pick []
+#reduce byEqn 2
+#synth Inhabited Nat
+
+def unfinished : Nat := by
+  sorry
+
+def unfinished2 : Nat := by
+  admit
+
+module
+
+public def exposed : Nat := 1
+unsafe def unchecked : Nat := 2
+
+partial def down : Nat → Nat
+  | 0 => 0
+  | n + 1 => down n
+termination_by n => n
+decreasing_by simp_wf
+
+nonrec def shadow : Nat := 0
+
+declare_syntax_cat mycat
+elab "hello_cmd" : command => pure ()
+elab_rules : term
+  | `(helloTerm) => `(0)
+
+def ch : Char := 'a'
+def esc : Char := '\n'
+def rawStr := r#"raw \"quoted\" string"#
+def hexN : Nat := 0xff
+def binN : Nat := 0b1010
+def quoted := ``Nat.succ
+def «module» : Nat := 1
+def forallDemo : Prop := forall x : Nat, x = x
+
+end Basics
+end Demo
