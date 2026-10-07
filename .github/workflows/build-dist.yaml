@@ -1,6 +1,6 @@
 name: Minified Build
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -17,6 +17,8 @@ jobs:
       uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       with:
         repository: 'highlightjs/highlight.js'
+        # keep in sync with the highlight.js version that dist/ was built with
+        ref: 15d3b627fa7c99cb98d7b6760a6fbdbfd519d1a0 # 11.9.0
     - name: Checkout highlightjs-lean
       uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       with:
